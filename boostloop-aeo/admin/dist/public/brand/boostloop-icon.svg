@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="405 248 450 475" role="img" aria-labelledby="logo-title logo-description">
+<title id="logo-title">BoostLoop symbol</title>
+<desc id="logo-description">Blue and violet loop with an upward arrow. BoostLoop: Earn, Exchange, Grow.</desc>
+<defs>
+ <linearGradient id="stem" x1="433" y1="268" x2="508" y2="518" gradientUnits="userSpaceOnUse"><stop stop-color="#0094ff"/><stop offset="1" stop-color="#0065fa"/></linearGradient>
+ <linearGradient id="blueLoop" x1="434" y1="563" x2="668" y2="449" gradientUnits="userSpaceOnUse"><stop stop-color="#0078ff"/><stop offset=".55" stop-color="#0067ff"/><stop offset="1" stop-color="#1761ff"/></linearGradient>
+ <linearGradient id="purpleLoop" x1="732" y1="520" x2="766" y2="701" gradientUnits="userSpaceOnUse"><stop stop-color="#3f1ae8"/><stop offset=".56" stop-color="#682afb"/><stop offset="1" stop-color="#7b38fa"/></linearGradient>
+ <linearGradient id="arrow" x1="532" y1="604" x2="826" y2="392" gradientUnits="userSpaceOnUse"><stop stop-color="#1324d5"/><stop offset=".36" stop-color="#4640f8"/><stop offset="1" stop-color="#7a35fa"/></linearGradient>
+ <linearGradient id="wordPurple" x1="678" y1="746" x2="1074" y2="905" gradientUnits="userSpaceOnUse"><stop stop-color="#4d25f5"/><stop offset="1" stop-color="#6827fa"/></linearGradient>
+</defs>
+<g id="symbol">
+ <path fill="url(#stem)" d="M421 535V307C421 283 441 264 465 264S508 283 508 307V409C463 445 422 491 421 535Z"/>
+ <path fill="url(#purpleLoop)" d="M778 500C805 525 823 559 821 595C818 657 771 705 707 705C669 706 639 694 617 666L660 640C674 644 687 646 700 644C731 642 751 622 751 593C751 576 742 562 729 551Z"/>
+ <path fill="url(#blueLoop)" d="M421 535C421 479 501 393 558 393C610 391 661 421 689 457L634 513C605 483 581 470 558 472C519 473 496 501 496 535C496 578 521 610 560 595C584 587 599 574 619 555L650 605C627 650 584 671 545 671C476 672 421 615 421 535Z"/>
+ <path fill="url(#arrow)" d="M508 578C536 607 567 597 603 571L746 424L727 418C717 415 717 403 728 400L820 375C829 372 835 377 835 386L836 483C836 494 825 498 818 487L807 472L663 615C644 633 624 646 603 656C561 644 529 612 508 578Z"/>
+</g>
+</svg>
