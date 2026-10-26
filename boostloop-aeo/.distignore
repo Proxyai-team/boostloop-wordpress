@@ -1,0 +1,7 @@
+# Excluded from the plugin ZIP.
+.distignore
+.git
+.gitignore
+.DS_Store
+node_modules
+*.boostloop-bak
