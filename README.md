@@ -4,6 +4,7 @@
 
 - `boostloop-aeo/` — the plugin, as shipped (no minification; nothing loads from a remote server).
 - `admin-build/` — Vite config and WordPress host shim used to build `boostloop-aeo/admin/dist`. The admin screens are shared with the BoostLoop web app, so a full rebuild needs that app's `components/` and `app/` folders; the built bundle here is unminified.
+- `aeo/` — the AEO scanner engine: the checks, scoring, robots-aware fetcher, fix generators and Web Bot Auth signing. Plain TypeScript with no dependencies; run the tests with `node --test aeo/*.test.ts` (Node 22+).
 
 ## Security
 
