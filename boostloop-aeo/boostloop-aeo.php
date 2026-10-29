@@ -1,5 +1,9 @@
 <?php
 /**
+ * BoostLoop for WordPress.
+ *
+ * @package BoostLoop
+ *
  * Plugin Name: BoostLoop
  * Plugin URI: https://boostloop.club
  * Author: BoostLoop
@@ -20,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'BOOSTLOOP_AEO_FILE', __FILE__ );
 define( 'BOOSTLOOP_AEO_VERSION', '0.3.14' );
 if ( ! defined( 'BOOSTLOOP_AEO_APP' ) ) {
-	define( 'BOOSTLOOP_AEO_APP', 'https://boostloop.club' ); // can be overridden in wp-config.php
+	define( 'BOOSTLOOP_AEO_APP', 'https://boostloop.club' ); // Can be overridden in wp-config.php.
 }
 
 require_once __DIR__ . '/includes/api.php';
@@ -28,10 +32,17 @@ require_once __DIR__ . '/includes/admin.php';
 require_once __DIR__ . '/includes/commerce.php';
 
 /** Request path without trailing slash; the homepage is '/'. Fix artifacts are keyed the same way. */
+/**
+ * Normalises a path: leading slash, no trailing slash.
+ *
+ * @param string $path Raw path.
+ * @return string
+ */
 function boostloop_aeo_norm_path( $path ) {
 	return '/' . trim( (string) $path, '/' );
 }
 
+/** Current request path, normalised. */
 function boostloop_aeo_current_path() {
 	$uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '/';
 	return boostloop_aeo_norm_path( (string) wp_parse_url( $uri, PHP_URL_PATH ) );
@@ -43,6 +54,12 @@ function boostloop_aeo_artifacts() {
 	return is_array( $stored ) ? $stored : array();
 }
 
+/**
+ * Stores fix artifacts for one check.
+ *
+ * @param string $check_id  Check id.
+ * @param array  $artifacts Artifacts to store.
+ */
 function boostloop_aeo_store_artifacts( $check_id, array $artifacts ) {
 	$stored = boostloop_aeo_artifacts();
 	foreach ( $artifacts as $a ) {
@@ -64,6 +81,11 @@ function boostloop_aeo_store_artifacts( $check_id, array $artifacts ) {
 /** Site settings a fix may change, with the value to restore on "Remove all fixes". */
 const BOOSTLOOP_AEO_OPTIONS = array( 'blog_public', 'boostloop_aeo_hard404' );
 
+/**
+ * Applies option changes a fix needs, remembering prior values.
+ *
+ * @param array $artifacts Artifacts.
+ */
 function boostloop_aeo_apply_options( array $artifacts ) {
 	$prior = get_option( 'boostloop_aeo_options_prior', array() );
 	$prior = is_array( $prior ) ? $prior : array();
@@ -79,6 +101,7 @@ function boostloop_aeo_apply_options( array $artifacts ) {
 	update_option( 'boostloop_aeo_options_prior', $prior, false );
 }
 
+/** Restores options changed by fixes. */
 function boostloop_aeo_restore_options() {
 	$prior = get_option( 'boostloop_aeo_options_prior', array() );
 	foreach ( is_array( $prior ) ? $prior : array() as $name => $value ) {
@@ -89,7 +112,12 @@ function boostloop_aeo_restore_options() {
 	delete_option( 'boostloop_aeo_options_prior' );
 }
 
-/** Plain text from BoostLoop to safe paragraph HTML. */
+/**
+ * Plain text from BoostLoop to safe paragraph HTML.
+ *
+ * @param string $text Text.
+ * @return string
+ */
 function boostloop_aeo_paragraphs( $text ) {
 	return wpautop( esc_html( trim( (string) $text ) ) );
 }
@@ -97,6 +125,11 @@ function boostloop_aeo_paragraphs( $text ) {
 /**
  * Drafts of trust pages and homepage text. Trust pages become unpublished WordPress pages (one per kind, updated in place while
  * still a draft); the homepage text waits for approval in the plugin screen. Nothing goes public from here.
+ */
+/**
+ * Stores drafts.
+ *
+ * @param array $artifacts Artifacts.
  */
 function boostloop_aeo_store_drafts( array $artifacts ) {
 	$drafts = array();
@@ -169,6 +202,14 @@ add_action(
 	5
 );
 
+/**
+ * Finds an artifact by placement, path and type prefix.
+ *
+ * @param string $placement   Placement.
+ * @param string $path        Path.
+ * @param string $type_prefix Type prefix.
+ * @return array|null
+ */
 function boostloop_aeo_find( $placement, $path, $type_prefix ) {
 	foreach ( boostloop_aeo_artifacts() as $a ) {
 		if ( $a['placement'] === $placement && $a['path'] === $path && strpos( $a['type'], $type_prefix ) === 0 ) {
@@ -231,7 +272,12 @@ add_action(
 	5
 );
 
-/** Any stored file artifact for this exact path, whatever its content type. */
+/**
+ * Any stored file artifact for this exact path, whatever its content type.
+ *
+ * @param string $path Request path.
+ * @return array|null
+ */
 function boostloop_aeo_find_file( $path ) {
 	foreach ( boostloop_aeo_artifacts() as $a ) {
 		if ( 'file' === $a['placement'] && $a['path'] === $path ) {
@@ -241,10 +287,16 @@ function boostloop_aeo_find_file( $path ) {
 	return null;
 }
 
+/**
+ * Sends a 200 response with the given body and exits.
+ *
+ * @param string $type Content-Type.
+ * @param string $body Body.
+ */
 function boostloop_aeo_send( $type, $body ) {
 	status_header( 200 );
 	header( 'Content-Type: ' . $type );
-	header( 'X-Robots-Tag: noindex' ); // the HTML page stays canonical
+	header( 'X-Robots-Tag: noindex' ); // The HTML page stays canonical.
 	header( 'Cache-Control: no-cache' );
 	echo $body; // phpcs:ignore WordPress.Security.EscapeOutput -- text, markdown, JSON or XML body, not HTML.
 	exit;
@@ -353,7 +405,7 @@ add_action(
 		}
 		status_header( 200 );
 		header( 'Content-Type: ' . $a['type'] );
-		header( 'X-Robots-Tag: noindex' ); // the HTML page stays canonical
+		header( 'X-Robots-Tag: noindex' ); // The HTML page stays canonical.
 		echo $a['content']; // phpcs:ignore WordPress.Security.EscapeOutput -- plain text / markdown body, not HTML
 		exit;
 	},

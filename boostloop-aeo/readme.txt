@@ -1,6 +1,6 @@
 === BoostLoop ===
 Contributors: proxyai
-Tags: seo, ai, llms-txt, structured data, robots.txt
+Tags: seo, ai, llms-txt, structured-data, robots.txt
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
@@ -31,6 +31,7 @@ https://boostloop.club.
 
 * Terms of Service: https://boostloop.club/terms
 * Privacy Policy: https://boostloop.club/privacy
+* Documentation: https://boostloop.club/docs
 
 **When you first open the BoostLoop screen in wp-admin**, the plugin sends this site's address, its name, the administration
 email address and a random secret generated on your site. This creates the account for this domain. Nothing is sent before an
@@ -48,6 +49,15 @@ alone and never reach this site. Stripe terms: https://stripe.com/legal/consumer
 The admin screen in `admin/dist/` is compiled from the BoostLoop app source (React, TypeScript, Vite). The build configuration
 and the plugin source are public at https://github.com/Proxyai-team/boostloop-wordpress. Build with
 `npx vite build --config admin-build/vite.config.ts`.
+
+== Screenshots ==
+
+1. Overall AEO score for the site, with per-level readiness (Quick wins, Technical groundwork, Advanced integration, Commerce).
+2. Quick wins checklist after a rescan, 8 of 10 complete, with the robots.txt, sitemap.xml, WAF and JSON-LD checks passing.
+3. Quick wins list with the JSON-LD check marked fixed.
+4. Audit details dialog for the robots.txt check, showing its conclusion.
+5. Quick wins list with the robots.txt check expanded and the JSON-LD check still to fix.
+6. "Remove all BoostLoop fixes from this site" control, at the bottom of the screen.
 
 == Installation ==
 

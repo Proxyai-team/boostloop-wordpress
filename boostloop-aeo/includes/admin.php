@@ -1,5 +1,9 @@
 <?php
 /**
+ * BoostLoop admin screen.
+ *
+ * @package BoostLoop
+ *
  * The BoostLoop screen in wp-admin. All UI is BoostLoop's own React app, shipped in admin/dist (built from the
  * site's screens, see admin-build/); PHP only pairs the site and prints the mount point.
  */
@@ -63,6 +67,7 @@ add_action(
 	}
 );
 
+/** Renders the BoostLoop admin screen mount point. */
 function boostloop_aeo_page() {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return;
@@ -79,4 +84,16 @@ function boostloop_aeo_page() {
 	wp_nonce_field( 'boostloop_aeo_reset' );
 	submit_button( __( 'Remove all BoostLoop fixes from this site', 'boostloop-aeo' ), 'link', 'submit', false );
 	echo '</form>';
+	echo '<p class="boostloop-footer" style="padding:0 0 16px">';
+	$links = array(
+		'https://boostloop.club/terms'   => __( 'Terms', 'boostloop-aeo' ),
+		'https://boostloop.club/privacy' => __( 'Privacy', 'boostloop-aeo' ),
+		'https://boostloop.club/docs'    => __( 'Docs', 'boostloop-aeo' ),
+	);
+	$html  = array();
+	foreach ( $links as $url => $label ) {
+		$html[] = '<a href="' . esc_url( $url ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( $label ) . '</a>';
+	}
+	echo implode( ' &middot; ', $html ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- each link is escaped above.
+	echo '</p>';
 }

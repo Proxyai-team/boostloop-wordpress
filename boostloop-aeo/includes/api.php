@@ -1,5 +1,9 @@
 <?php
 /**
+ * BoostLoop pairing and REST proxy.
+ *
+ * @package BoostLoop
+ *
  * Pairing and the REST proxy. The site secret is generated here, kept in this site's options, and only ever sent
  * server to server. The admin screen's browser code calls this site's own REST API; nothing it holds can reach
  * BoostLoop directly.
@@ -12,6 +16,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** Endpoints the plugin screen may reach; BoostLoop enforces the same list for site-authenticated calls. */
 const BOOSTLOOP_AEO_PATHS = '#^(me|wallet|karma/checkout|campaigns(/.*)?|contributions(/.*)?|proofs/review|proof-files/[\w-]+|hall-of-fame|aeo/(scan|fix|leaderboard|domain/[^/]+)|mcp-tokens(/.*)?)$#';
 
+/**
+ * Whether the current user may manage BoostLoop.
+ *
+ * @return bool
+ */
 function boostloop_aeo_can_manage() {
 	return current_user_can( 'manage_options' );
 }
@@ -121,7 +130,14 @@ function boostloop_aeo_connect() {
 	return true;
 }
 
-/** Forwards one allowlisted call to BoostLoop as this site. Auto-fix responses carry the files this site then serves. */
+/**
+ * Forwards one allowlisted call to BoostLoop as this site.
+ *
+ * Auto-fix responses carry the files this site then serves.
+ *
+ * @param WP_REST_Request $request REST request.
+ * @return WP_REST_Response|WP_Error
+ */
 function boostloop_aeo_proxy( WP_REST_Request $request ) {
 	$path   = (string) $request['path'];
 	$secret = get_option( 'boostloop_aeo_secret' );
@@ -195,6 +211,11 @@ function boostloop_aeo_proxy( WP_REST_Request $request ) {
  * The homepage description meta, stored as the homepage `head` artifact so the wp_head hook prints it. Merges with
  * (never clobbers) whatever the metadata fix already stored: the description line is replaced, other tags stay.
  */
+/**
+ * Stores the homepage description meta.
+ *
+ * @param string $description Description text.
+ */
 function boostloop_aeo_publish_head_description( $description ) {
 	$stored = get_option( 'boostloop_aeo_artifacts', array() );
 	$stored = is_array( $stored ) ? $stored : array();
@@ -244,6 +265,12 @@ function boostloop_aeo_remove_head_description() {
  * front of it. A path whose live body differs from what we just stored is held by a cache; the fix is saved and
  * shows once the cache expires or is purged. Unreachable or redirected checks say nothing.
  */
+/**
+ * Lists file artifacts whose live body differs from what was stored.
+ *
+ * @param array $artifacts Artifacts.
+ * @return array
+ */
 function boostloop_aeo_stale_files( array $artifacts ) {
 	$stale = array();
 	foreach ( $artifacts as $a ) {
@@ -291,6 +318,13 @@ function boostloop_aeo_stale_files( array $artifacts ) {
  * the original is kept once as `<file>.boostloop-bak` and put back by "Remove all fixes".
  * Returns true when there is no such file or it was updated, false when it exists but cannot be written.
  */
+/**
+ * Writes a physical file in the site root.
+ *
+ * @param string $path    Path.
+ * @param string $content Content.
+ * @return bool
+ */
 function boostloop_aeo_write_physical( $path, $content ) {
 	$file = untrailingslashit( ABSPATH ) . $path; // phpcs:ignore PluginCheck.CodeAnalysis.WriteFile.ABSPATHDetected -- the site-root robots.txt/llms.txt must be replaced where it is served from.
 	if ( ! is_file( $file ) ) {
@@ -323,7 +357,13 @@ function boostloop_aeo_restore_physical() {
 	delete_option( 'boostloop_aeo_written' );
 }
 
-/** WooCommerce's published catalogue (name, link, price, image) for the price and product-feed fixes. Empty without WooCommerce. */
+/**
+ * WooCommerce's published catalogue (name, link, price, image) for the price and product-feed fixes.
+ * Empty without WooCommerce.
+ *
+ * @param string $currency Currency code.
+ * @return array
+ */
 function boostloop_aeo_catalogue( $currency ) {
 	if ( ! function_exists( 'wc_get_products' ) ) {
 		return array();
@@ -357,6 +397,14 @@ function boostloop_aeo_catalogue( $currency ) {
 	return $out;
 }
 
+/**
+ * Builds a multipart/form-data body.
+ *
+ * @param array  $fields   Name => value.
+ * @param array  $files    Files.
+ * @param string $boundary Boundary.
+ * @return string
+ */
 function boostloop_aeo_multipart( array $fields, array $files, $boundary ) {
 	$out = '';
 	foreach ( $fields as $name => $value ) {

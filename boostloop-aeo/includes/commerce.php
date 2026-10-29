@@ -1,5 +1,9 @@
 <?php
 /**
+ * BoostLoop commerce discovery documents.
+ *
+ * @package BoostLoop
+ *
  * Commerce discovery documents (UCP, ACP, AP2, MPP, x402). The values are entered by the site owner and
  * stay in this site's options; BoostLoop only charges for saving them and never sees them. Each document is a plain
  * JSON discovery file built from those values, served at its well-known path. Publishing it does not make the shop
@@ -10,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/** check id => well-known path, label, fields (key => [label, type, required]). */
+/** Check id => well-known path, label, fields (key => [label, type, required]). */
 function boostloop_aeo_commerce_defs() {
 	return array(
 		32 => array(
@@ -55,12 +59,23 @@ function boostloop_aeo_commerce_defs() {
 	);
 }
 
+/**
+ * Saved commerce values for this site.
+ *
+ * @return array
+ */
 function boostloop_aeo_commerce_saved() {
 	$saved = get_option( 'boostloop_aeo_commerce', array() );
 	return is_array( $saved ) ? $saved : array();
 }
 
-/** Clean values for one check, or a WP_Error naming the first bad field. */
+/**
+ * Clean values for one check, or a WP_Error naming the first bad field.
+ *
+ * @param string $check_id Check id.
+ * @param mixed  $input    Submitted values.
+ * @return array|WP_Error
+ */
 function boostloop_aeo_commerce_clean( $check_id, $input ) {
 	$defs = boostloop_aeo_commerce_defs();
 	if ( ! isset( $defs[ $check_id ] ) || ! is_array( $input ) ) {
@@ -102,7 +117,12 @@ function boostloop_aeo_commerce_clean( $check_id, $input ) {
 	return $out;
 }
 
-/** The JSON document for a well-known path, or null when none is set up for it. */
+/**
+ * The JSON document for a well-known path, or null when none is set up for it.
+ *
+ * @param string $path Well-known path.
+ * @return string|null
+ */
 function boostloop_aeo_commerce_document( $path ) {
 	$saved = boostloop_aeo_commerce_saved();
 	foreach ( boostloop_aeo_commerce_defs() as $id => $def ) {
